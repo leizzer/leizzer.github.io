@@ -3,8 +3,8 @@ import applicationReducer from './slices/application'
 
 const store = configureStore({
   reducer: {
-    application: applicationReducer
-  }
+    application: applicationReducer,
+  },
 })
 
 export default store
