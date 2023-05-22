@@ -17,7 +17,6 @@ const Canvas: React.FC<React.PropsWithChildren> = (props) => {
         color: isOver ? 'green' : 'black',
       }}
     >
-      AAAAAH
       {props.children}
     </div>
   )

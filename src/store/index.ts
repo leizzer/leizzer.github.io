@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import applicationReducer from './slices/application'
+import boardReducer from './slices/board'
 
 const store = configureStore({
   reducer: {
     application: applicationReducer,
+    board: boardReducer,
   },
 })
 

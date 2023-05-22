@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { Circle, Square, Triangle } from 'components/figures'
 import { useSelector, useDispatch } from 'app/hook'
 import { select } from 'store/slices/application'
+import { addItem } from 'store/slices/board'
 
 type Tools = Record<string, React.ReactElement>
 
@@ -20,12 +21,26 @@ const Tool: React.FC<Props> = ({ type }) => {
   const selectedTool = useSelector((state) => state.application.selectedTool)
   const dispatch = useDispatch()
 
+  const handleClick = (toolName: string): void => {
+    dispatch(select(toolName))
+    dispatch(
+      addItem({
+        kind: type,
+        x: 0,
+        y: 0,
+        z: 10,
+      })
+    )
+  }
+
   return (
     <ToolWrap
       key={type}
       id={type}
       selected={selectedTool === type}
-      onClick={() => dispatch(select(type))}
+      onClick={() => {
+        handleClick(type)
+      }}
     >
       {tools[type]}
     </ToolWrap>
