@@ -1,15 +1,14 @@
 import React, { memo } from 'react'
+import { useTheme } from 'styled-components'
 
-const Square: React.FC = () => (
-  <svg>
-    <rect
-      width="100"
-      height="100"
-      fill="rgb(0,0,255)"
-      strokeWidth="3"
-      stroke="rgb(0,0,0)"
-    />
-  </svg>
-)
+const Square: React.FC = () => {
+  const theme = useTheme()
+
+  return (
+    <svg {...theme?.svgTool}>
+      <rect width="100" height="100" {...theme?.toolStyle} />
+    </svg>
+  )
+}
 
 export default memo(Square)

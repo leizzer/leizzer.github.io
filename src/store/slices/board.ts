@@ -10,7 +10,7 @@ export interface Item {
   z: number
 }
 
-interface ItemRecord extends Omit<Item, 'id' | 'key'> {
+export interface ItemRecord extends Omit<Item, 'id' | 'key'> {
   id: number
   key: string
 }
@@ -27,11 +27,18 @@ export const boardSlice = createSlice({
   reducers: {
     addItem: (state, action: PayloadAction<Item>) => {
       let { id, key, kind } = action.payload
-      id = id ?? _.keys(state.items).length
+
+      if (id == null) {
+        // TODO: `last` might not be always in the same order
+        // I use `last` instead of length for when `delete` feature is implemented
+        const last = _.last(_.values(state.items))
+        id = last != null ? last.id + 1 : 1
+      }
+
       key = key ?? `${kind}-${id}`
 
       const newRecord: Record<string, ItemRecord> = {
-        [key]: {
+        [id]: {
           ...action.payload,
           id,
           key,
@@ -44,7 +51,7 @@ export const boardSlice = createSlice({
       state.items = _.omit(state.items, [action.payload])
     },
     moveItem: (state, action: PayloadAction<ItemRecord>) => {
-      state.items = { ...state.items, [action.payload.key]: action.payload }
+      state.items = { ...state.items, [action.payload.id]: action.payload }
     },
   },
 })

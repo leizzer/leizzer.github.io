@@ -13,16 +13,18 @@ interface Props extends React.PropsWithChildren {
 const Item: React.FC<Props> = (props) => {
   const Element = props.element != null ? props.element : 'div'
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: 'uniqueid',
+    id: props.item?.id ?? 'ghost',
+    data: { ...props.item },
   })
 
-  console.log(transform)
-  const style =
-    transform != null
-      ? {
-          transform: CSS.Translate.toString(transform),
-        }
-      : undefined
+  const style = {
+    width: '100px',
+    height: '100px',
+    position: 'absolute',
+    left: props.item?.x,
+    top: props.item?.y,
+    transform: CSS.Translate.toString(transform),
+  }
 
   const displayChildren = (): React.ReactNode => {
     let result = props.children
@@ -44,7 +46,13 @@ const Item: React.FC<Props> = (props) => {
   }
 
   return (
-    <Element ref={setNodeRef} style={style} {...listeners} {...attributes}>
+    <Element
+      ref={setNodeRef}
+      style={style}
+      className={'item'}
+      {...listeners}
+      {...attributes}
+    >
       {displayChildren()}
     </Element>
   )

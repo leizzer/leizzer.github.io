@@ -1,9 +1,8 @@
 import React from 'react'
-import styled from 'styled-components'
+import { useDraggable } from '@dnd-kit/core'
+import styled, { useTheme } from 'styled-components'
 import { Circle, Square, Triangle } from 'components/figures'
-import { useSelector, useDispatch } from 'app/hook'
-import { select } from 'store/slices/application'
-import { addItem } from 'store/slices/board'
+import { useSelector } from 'app/hook'
 
 type Tools = Record<string, React.ReactElement>
 
@@ -13,51 +12,47 @@ const tools: Tools = {
   triangle: <Triangle />,
 }
 
-interface Props {
-  type: string
-}
-
-const Tool: React.FC<Props> = ({ type }) => {
-  const selectedTool = useSelector((state) => state.application.selectedTool)
-  const dispatch = useDispatch()
-
-  const handleClick = (toolName: string): void => {
-    dispatch(select(toolName))
-    dispatch(
-      addItem({
-        kind: type,
-        x: 0,
-        y: 0,
-        z: 10,
-      })
-    )
-  }
-
-  return (
-    <ToolWrap
-      key={type}
-      id={type}
-      selected={selectedTool === type}
-      onClick={() => {
-        handleClick(type)
-      }}
-    >
-      {tools[type]}
-    </ToolWrap>
-  )
-}
-
 interface ToolProps {
-  id: string
   selected: boolean
 }
 
 const ToolWrap = styled.div<ToolProps>`
-  background-color: ${(props) => (props.selected ? 'yellow' : 'none')}};
+  display: inline-block;
+  background-color: ${({ selected, theme }) =>
+    selected ? theme.tertiary : 'none'}};
 `
 
-export const CircleTool: React.FC = () => <Tool type="circle" />
-export const SquareTool: React.FC = () => <Tool type="square" />
-export const TriangleTool: React.FC = () => <Tool type="triangle" />
+interface Props {
+  kind: string
+}
+
+const Tool: React.FC<Props> = ({ kind }) => {
+  const theme = useTheme()
+  const { attributes, listeners, setNodeRef } = useDraggable({
+    id: kind,
+    data: { kind, tool: true },
+  })
+  const selectedTool = useSelector(
+    (state) => state.application.selectedItemKind
+  )
+
+  return (
+    <ToolWrap key={kind} selected={selectedTool === kind}>
+      <div
+        id={kind}
+        ref={setNodeRef}
+        {...theme?.svgTool}
+        {...listeners}
+        {...attributes}
+      >
+        {tools[kind]}
+      </div>
+    </ToolWrap>
+  )
+}
+
+export const CircleTool: React.FC = () => <Tool kind="circle" />
+export const SquareTool: React.FC = () => <Tool kind="square" />
+export const TriangleTool: React.FC = () => <Tool kind="triangle" />
 
 export default Tool
