@@ -21,15 +21,16 @@
     "react-scripts": "5.0.1",
     "styled-components": "^6.0.0-rc.1",
     "typescript": "*",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "webpack": "5.83.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy" : "yarn run build",
-    "deploy" : "gh-pages -d build",
+    "predeploy": "yarn run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
